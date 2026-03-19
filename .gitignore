@@ -1,0 +1,30 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+env/
+
+# Model files (large / binary)
+model/*.pkl
+
+# DVC cache (will be handled separately)
+.dvc/
+.dvcignore
+
+# Dataset (tracked via DVC later)
+data/*.csv
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Jupyter notebooks (if any)
+.ipynb_checkpoints/
+
+# Environment variables
+.env
