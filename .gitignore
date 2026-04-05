@@ -28,3 +28,7 @@ Thumbs.db
 
 # Environment variables
 .env
+
+# MLflow
+mlruns/
+mlflow.db
