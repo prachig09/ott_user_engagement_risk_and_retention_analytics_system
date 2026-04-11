@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import Dict, Any
+from typing import Dict, Any, List
 import copy
 
 # Import your modules
@@ -73,3 +73,31 @@ def full_pipeline(customer: CustomerData):
     except Exception as e:
         print(f"Pipeline Error: {e}")
         return {"error": str(e)}
+
+class BatchCustomerData(BaseModel):
+    data: List[Dict[str, Any]]
+
+@app.post("/predict_batch")
+def predict_batch(batch: BatchCustomerData):
+    try:
+        # 🟢 PRE-ALLOCATE: Processing everything in one loop without SHAP
+        results = []
+        
+        # In a real production environment, you'd use model.predict(df) 
+        # for vectorization, but for now, we'll keep the loop fast.
+        for customer_item in batch.data:
+            # Skip copies/deepcopies here to save memory/time
+            prediction = predict(customer_item) 
+            
+            results.append({
+                "Customer_ID": customer_item.get("customer_id", "N/A"),
+                "Churn_Probability": round(float(prediction["probability"]), 3),
+                "Risk_Level": prediction["risk_level"],
+                "Priority": "🔴 High" if prediction["risk_level"] == "HIGH" else "🟢 Low"
+            })
+            
+        return {"status": "success", "predictions": results}
+    
+    except Exception as e:
+        print(f"BATCH API ERROR: {e}")
+        return {"status": "error", "message": str(e)}

@@ -2,29 +2,37 @@ import gradio as gr
 from components.sidebar import render_sidebar
 from pages.home import render_home_page
 from pages.predict import render_predict_page
-# Import other pages similarly...
+from pages.upload import render_upload_page
 
+# Default theme (no special theme passed)
 with gr.Blocks(title="OTT Retention System") as demo:
     with gr.Row():
         # Render Sidebar
+        # Returns: home, upload, predict, reports, settings
         nav_btns = render_sidebar()
         
         # Main Content Area
         with gr.Column(scale=4):
             with gr.Tabs() as tabs:
                 with gr.TabItem("Home", id=0):
-                    home_page = render_home_page()
+                    render_home_page()
                 
                 with gr.TabItem("Upload", id=1):
-                    gr.Markdown("# Upload Page Content")
+                    render_upload_page()
                 
                 with gr.TabItem("Predict", id=2):
-                    predict_page = render_predict_page()
+                    render_predict_page()
+                
+                with gr.TabItem("Reports", id=3):
+                    gr.Markdown("# 📊 Model Analytics Reports")
+            
 
-    # Connect Sidebar buttons to Tabs
-    nav_btns[0].click(fn=lambda: gr.Tabs(selected=0), outputs=tabs)
-    nav_btns[1].click(fn=lambda: gr.Tabs(selected=1), outputs=tabs)
-    nav_btns[2].click(fn=lambda: gr.Tabs(selected=2), outputs=tabs)
+    # Connect Sidebar buttons to Tabs using gr.update
+    nav_btns[0].click(fn=lambda: gr.update(selected=0), outputs=tabs) # Home
+    nav_btns[1].click(fn=lambda: gr.update(selected=1), outputs=tabs) # Upload
+    nav_btns[2].click(fn=lambda: gr.update(selected=2), outputs=tabs) # Predict
+    nav_btns[3].click(fn=lambda: gr.update(selected=3), outputs=tabs) # Reports
+    nav_btns[4].click(fn=lambda: gr.update(selected=4), outputs=tabs) # Settings
 
 if __name__ == "__main__":
     demo.launch()
