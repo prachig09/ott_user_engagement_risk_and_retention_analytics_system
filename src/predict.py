@@ -16,16 +16,24 @@ def load_model_and_encoders():
 
 def preprocess_input(data, encoders, feature_names):
     """Preprocess input data for prediction."""
+    
+    # 1. Force keys to lowercase to match CSV: 'Gender' -> 'gender'
+    clean_data = {k.lower().replace(" ", "_"): v for k, v in data.items()}
+    
+    # 2. Force categorical values to lowercase: 'Basic' -> 'basic'
+    for k, v in clean_data.items():
+        if isinstance(v, str):
+            clean_data[k] = v.lower()
 
-    df = pd.DataFrame([data])
+    df = pd.DataFrame([clean_data])
 
-    # 🔹 One-hot encode categorical columns
+    # 3. One-hot encode
     df = pd.get_dummies(df)
 
-    # 🔹 Align with training features
+    # 4. Align with training features (This is where the 0s were coming from)
     df = df.reindex(columns=feature_names, fill_value=0)
 
-    # 🔹 Scale
+    # 5. Scale
     scaler = encoders["scaler"]
     df_scaled = scaler.transform(df)
 

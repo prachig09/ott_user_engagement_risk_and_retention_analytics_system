@@ -1,106 +1,75 @@
-"""
-FastAPI for OTT Churn Prediction System
-
-Endpoints:
-- GET  /            → Health check
-- POST /predict     → Prediction only
-- POST /recommend   → Prediction + Recommendations
-- POST /full        → Combined output
-"""
-
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Dict, Any
+import copy
 
 # Import your modules
-from src.predict import predict, load_model_and_encoders
+from src.predict import predict, load_model_and_encoders, preprocess_input
 from src.recommend import generate_recommendations
+from src.explain import explain_prediction
 
-# ─────────────────────────────────────────────
-# Initialize App
-# ─────────────────────────────────────────────
-app = FastAPI(
-    title="OTT Churn Prediction API",
-    description="Predict churn and generate retention strategies",
-    version="1.0"
-)
+app = FastAPI(title="OTT Churn Prediction System")
 
-# ─────────────────────────────────────────────
-# Load Model ONCE (IMPORTANT 🚀)
-# ─────────────────────────────────────────────
+# Load Model once at startup
 model, encoders, feature_names = load_model_and_encoders()
 
-
-# ─────────────────────────────────────────────
-# Request Schema
-# ─────────────────────────────────────────────
 class CustomerData(BaseModel):
     data: Dict[str, Any]
 
-
-# ─────────────────────────────────────────────
-# Health Check
-# ─────────────────────────────────────────────
-@app.get("/")
-def home():
-    return {
-        "status": "OK",
-        "message": "OTT Churn API is running 🚀"
-    }
-
-
-# ─────────────────────────────────────────────
-# Prediction Endpoint
-# ─────────────────────────────────────────────
-@app.post("/predict")
-def predict_api(customer: CustomerData):
-    """
-    Returns churn prediction only
-    """
-    result = predict(customer.data)
-    return result
-
-
-# ─────────────────────────────────────────────
-# Recommendation Endpoint
-# ─────────────────────────────────────────────
-@app.post("/recommend")
-def recommend_api(customer: CustomerData):
-    """
-    Returns prediction + recommendations
-    """
-    prediction = predict(customer.data)
-
-    recommendation = generate_recommendations(
-        prediction["probability"],
-        customer.data
-    )
-
-    return {
-        "prediction": prediction,
-        "recommendation": recommendation
-    }
-
-
-# ─────────────────────────────────────────────
-# Full Pipeline Endpoint
-# ─────────────────────────────────────────────
 @app.post("/full")
 def full_pipeline(customer: CustomerData):
     """
-    Full pipeline:
-    - Prediction
-    - Recommendations
+    Combines Prediction, SHAP Explanation (%), and Recommendations.
     """
+    try:
+        # 🟢 STEP 1: Define input_data immediately
+        # We use .copy() for the model and deepcopy for recommendations
+        input_data = customer.data.copy()
+        raw_data_for_recom = copy.deepcopy(customer.data)
 
-    prediction = predict(customer.data)
+        # 🔵 STEP 2: Get Prediction
+        # (Note: input_data might be modified/encoded here)
+        prediction = predict(input_data)
+        prob_value = float(prediction["probability"])
 
-    recommendation = generate_recommendations(
-        prediction["probability"],
-        customer.data
-    )
+        # 🟡 STEP 3: Get Explanation with Percentage Calculation
+        factors = []
+        try:
+            processed = preprocess_input(input_data, encoders, feature_names)
+            exp_res = explain_prediction(processed, model, feature_names)
+            
+            raw_factors = exp_res.get("top_factors", [])
+            
+            # Calculate total impact for percentage normalization
+            total_impact = sum(abs(f.get("impact", 0)) for f in raw_factors)
+            
+            for f in raw_factors:
+                val = f.get("impact", 0)
+                # Normalize to % (fallback to 1 to avoid division by zero)
+                pct = (abs(val) / (total_impact if total_impact > 0 else 1)) * 100
+                
+                factors.append({
+                    "feature": f.get("feature_name", f.get("feature")),
+                    "impact_pct": round(pct, 1),
+                    "direction": f.get("direction")
+                })
+        except Exception as e:
+            print(f"SHAP Error: {e}")
 
-    return {
-        "prediction": prediction,
-        "recommendation": recommendation
-    }
+        # 🟠 STEP 4: Get Recommendations
+        # We use raw_data_for_recom so the strings like "Basic" are still there
+        recommendation = generate_recommendations(
+            prob_value,
+            raw_data_for_recom,
+            top_factors=factors
+        )
+
+        return {
+            "prediction": prediction,
+            "explanation": factors,
+            "recommendation": recommendation
+        }
+
+    except Exception as e:
+        print(f"Pipeline Error: {e}")
+        return {"error": str(e)}

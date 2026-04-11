@@ -85,10 +85,10 @@ def generate_recommendations(churn_probability, customer_data, top_factors=None)
 
 
    return {
-       "risk_level": risk,
-       "churn_probability": churn_probability,
-       "recommended_actions": recommendations[:5]
-   }
+    "risk_level": risk,
+    "churn_probability": churn_probability,
+    "recommended_actions": recommendations[:5]  # <-- The UI is looking for this exact key
+}
 
 
 
