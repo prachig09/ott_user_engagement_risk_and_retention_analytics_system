@@ -10,8 +10,8 @@ env/
 model/*.pkl
 
 # DVC cache (will be handled separately)
-.dvc/
-.dvcignore
+.dvc/cache
+.dvc/tmp
 
 # Dataset (tracked via DVC later)
 data/*.csv
@@ -32,3 +32,4 @@ Thumbs.db
 # MLflow
 mlruns/
 mlflow.db
+/model

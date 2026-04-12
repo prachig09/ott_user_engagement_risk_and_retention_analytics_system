@@ -1,0 +1,5 @@
+outs:
+- md5: 08d0d542d7907c387c29acc0ad0a867e
+  size: 545934
+  hash: md5
+  path: netflix_customer_churn.csv
