@@ -55,6 +55,7 @@ model/*.joblib
 # DVC Cache (auto-managed)
 # =========================
 .dvc/cache/
+.dvc/tmp/
 
 # =========================
 # Docker (optional)
