@@ -1,21 +1,20 @@
-# Use slim Python base image
-FROM python:3.11-slim
+# Base image
+FROM python:3.10-slim
 
-# Set working directory inside container
+# Set working directory
 WORKDIR /app
 
-# Copy dependency files first (better caching)
-COPY pyproject.toml uv.lock* ./
+# Copy requirements first (for caching)
+COPY requirements.txt .
 
-# Install uv (dependency manager)
-RUN pip install uv
-RUN uv sync --frozen --no-dev
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project files
+# Copy entire project
 COPY . .
 
-# Expose FastAPI default port
-EXPOSE 8000
+# Expose Gradio port
+EXPOSE 7860
 
-# Command to run API with Uvicorn
-CMD ["uv", "run", "uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run the app
+CMD ["python", "-m", "ui.main"]

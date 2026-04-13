@@ -9,8 +9,8 @@ matplotlib==3.8.4
 shap==0.44.1
 
 # UI
-gradio==4.31.5
-
+gradio==4.29.0
+huggingface_hub==0.23.0
 # API (optional but you already have it)
 fastapi==0.111.0
 uvicorn==0.30.1
