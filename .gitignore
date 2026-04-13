@@ -1,35 +1,69 @@
-# Python cache
+# =========================
+# Python
+# =========================
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.so
 
-# Virtual environment
+# =========================
+# Virtual Environment
+# =========================
 venv/
-env/
+.env
+.env.*
 
-# Model files (large / binary)
-model/*.pkl
-
-# DVC cache (will be handled separately)
-.dvc/cache
-.dvc/tmp
-
-# Dataset (tracked via DVC later)
-data/*.csv
-
-# System files
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-
-# Jupyter notebooks (if any)
+# =========================
+# Jupyter / Notebooks
+# =========================
 .ipynb_checkpoints/
 
-# Environment variables
-.env
+# =========================
+# OS / Editor
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
 
-# MLflow
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# MLflow (DO NOT TRACK)
+# =========================
 mlruns/
 mlflow.db
-/model
+
+# =========================
+# Data (handled by DVC)
+# =========================
+data/*.csv
+data/*.zip
+data/*.parquet
+
+# =========================
+# Models (handled by DVC)
+# =========================
+model/*.pkl
+model/*.joblib
+
+# =========================
+# DVC Cache (auto-managed)
+# =========================
+.dvc/cache/
+
+# =========================
+# Docker (optional)
+# =========================
+*.tar
+
+# =========================
+# Misc
+# =========================
+try.txt
+demo
+test_batch_api.py
