@@ -1,10 +1,10 @@
 import gradio as gr
-from styles import CSS
-from components.sidebar import render_sidebar
-from pages.home import render_home_page
-from pages.predict import render_predict_page
-from pages.upload import render_upload_page
-from pages.reports import render_reports_page
+from ui.styles import CSS
+from ui.components.sidebar import render_sidebar
+from ui.pages.home import render_home_page
+from ui.pages.predict import render_predict_page
+from ui.pages.upload import render_upload_page
+from ui.pages.reports import render_reports_page
 
 
 theme=gr.themes.Citrus(

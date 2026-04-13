@@ -1,7 +1,7 @@
 import gradio as gr
 import pandas as pd
 import plotly.express as px
-from components.widgets import metric_card
+from ui.components.widgets import metric_card
 
 def get_churn_distribution_plot():
     # Synthetic data for the dashboard overview

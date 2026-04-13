@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pkl
+mlruns/
+venv/
+.env
+data/
+.dvc/
+.git/
