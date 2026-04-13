@@ -8,8 +8,11 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir \
+    --default-timeout=100 \
+    --retries 5 \
+    -r requirements.txt
 # Copy entire project
 COPY . .
 
