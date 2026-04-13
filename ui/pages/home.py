@@ -49,7 +49,7 @@ def get_feature_importance_plot():
 
 def render_home_page():
     with gr.Column() as page:
-        gr.Markdown("# 📊 Executive Overview")
+        gr.Markdown("# 📊 Dashboard")
         gr.Markdown("Welcome! Here is the current status of your OTT platform engagement.")
 
         # Metrics Row - using your metric_card widget

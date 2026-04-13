@@ -2,13 +2,14 @@ import gradio as gr
 
 def render_sidebar():
     with gr.Column(scale=1, variant="compact"):
-        gr.Markdown("## 🧭 ChurnGuard")
+        gr.Markdown("# 🧭 IVAS")
+        gr.Markdown("### Ingest • Validate • Automate • Scale")
         
         # Standard buttons without group or special classes
-        nav_home = gr.Button("🏠 Home")
-        nav_upload = gr.Button("📂 Batch Upload")
-        nav_predict = gr.Button("🔍 Predict Risk")
-        nav_reports = gr.Button("📄 Reports")
+        nav_home = gr.Button(" Home")
+        nav_upload = gr.Button(" Batch Upload")
+        nav_predict = gr.Button(" Predict Risk")
+        nav_reports = gr.Button(" Reports")
 
         gr.Markdown("<br>" * 5)
         gr.Markdown("---") # Replaces the Divider
