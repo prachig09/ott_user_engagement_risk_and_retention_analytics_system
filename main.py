@@ -49,8 +49,8 @@ with gr.Blocks(title="OTT Retention System", css=CSS, theme=theme) as demo:
                 with gr.Tab("Home", id=0):
                     render_home_page()
                 
-                #with gr.Tab("Upload", id=1):
-                    #render_upload_page()
+                with gr.Tab("Upload", id=1):
+                    render_upload_page()
                 
                 #with gr.Tab("Predict", id=2):
                     #render_predict_page()
