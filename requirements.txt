@@ -6,6 +6,7 @@ joblib==1.4.2
 shap==0.45.0
 
 gradio==4.29.0
+gradio_client==0.16.1
 fastapi==0.110.0
 uvicorn==0.29.0
 huggingface_hub==0.23.0
