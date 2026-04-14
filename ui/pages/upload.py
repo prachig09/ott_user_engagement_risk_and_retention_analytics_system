@@ -2,12 +2,14 @@ import gradio as gr
 import pandas as pd
 import requests
 import plotly.express as px
+import plotly.graph_objects as go
 
-BATCH_API_URL = "http://0.0.0.0:8000/predict_batch"
+BATCH_API_URL = "http://127.0.0.1:8000/predict_batch"
 
 def create_visuals(df):
     if df is None or df.empty:
-        return None, None
+        empty_fig = go.Figure()
+        return empty_fig, empty_fig
     
     # 🥧 1. Risk Distribution Pie Chart
     risk_counts = df['Risk_Level'].value_counts().reset_index()
@@ -33,8 +35,10 @@ def create_visuals(df):
     return fig_pie, fig_hist
 
 def run_batch_analysis(file):
+    empty_df = pd.DataFrame()
+    empty_fig = go.Figure()
     if file is None:
-        return None, "❌ No file uploaded.", None, None
+        return None, "❌ No file uploaded.", empty_fig, empty_fig
     
     try:
         df = pd.read_csv(file.name)
@@ -52,10 +56,11 @@ def run_batch_analysis(file):
             
             return results_df, f"✅ Analyzed {len(results_df)} records.", pie_chart, hist_chart
         else:
-            return None, f"❌ API Error: {api_results.get('message')}", None, None
+            return None, f"❌ API Error: {api_results.get('message')}", pie_chart, hist_chart
             
     except Exception as e:
-        return None, f"❌ Connection Error: {str(e)}", None, None
+        print(f"DEBUG: Batch Analysis Failed: {e}")
+        return empty_df, f"❌ Connection Error: {str(e)}", empty_fig, empty_fig
 
 def render_upload_page():
     with gr.Column() as page:
