@@ -41,7 +41,7 @@ with gr.Blocks(title="OTT Retention System", css=CSS, theme=theme) as demo:
     with gr.Row():
         # Render Sidebar
         # Returns: home, upload, predict, reports
-        nav_btns = render_sidebar()
+        nav_home, nav_upload, nav_predict, nav_reports = render_sidebar()
         
         # Main Content Area
         with gr.Column(scale=4):
@@ -59,10 +59,10 @@ with gr.Blocks(title="OTT Retention System", css=CSS, theme=theme) as demo:
                     render_reports_page()
             
     # Connect Sidebar buttons to Tabs using gr.Tabs.update (Gradio 4.x style)
-    nav_btns[0].click(fn=lambda: gr.Tabs(selected=0), outputs=tabs) # Home
-    nav_btns[1].click(fn=lambda: gr.Tabs(selected=1), outputs=tabs) # Upload
-    nav_btns[2].click(fn=lambda: gr.Tabs(selected=2), outputs=tabs) # Predict
-    nav_btns[3].click(fn=lambda: gr.Tabs(selected=3), outputs=tabs) # Reports
+    nav_home[0].click(fn=lambda: gr.Tabs(selected=0), outputs=tabs) # Home
+    nav_upload[1].click(fn=lambda: gr.Tabs(selected=1), outputs=tabs) # Upload
+    nav_predict[2].click(fn=lambda: gr.Tabs(selected=2), outputs=tabs) # Predict
+    nav_reports[3].click(fn=lambda: gr.Tabs(selected=3), outputs=tabs) # Reports
 
 if __name__ == "__main__":
     demo.launch()
