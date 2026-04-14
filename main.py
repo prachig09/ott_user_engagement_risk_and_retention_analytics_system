@@ -35,7 +35,7 @@ theme = gr.themes.Soft(
     button_primary_background_fill_hover="*primary_700",
     button_primary_text_color="white",
 )
-
+active_tab = gr.State(0)
 # 3. Application Layout
 with gr.Blocks(title="OTT Retention System", css=CSS, theme=theme) as demo:
     with gr.Row():
@@ -46,17 +46,17 @@ with gr.Blocks(title="OTT Retention System", css=CSS, theme=theme) as demo:
         # Main Content Area
         with gr.Column(scale=4):
             with gr.Tabs() as tabs:
-                with gr.TabItem("Home", id=0):
+                with gr.Tab("Home", id=0):
                     render_home_page()
                 
-                with gr.TabItem("Upload", id=1):
-                    render_upload_page()
+                #with gr.Tab("Upload", id=1):
+                    #render_upload_page()
                 
-                with gr.TabItem("Predict", id=2):
-                    render_predict_page()
+                #with gr.Tab("Predict", id=2):
+                    #render_predict_page()
                 
-                with gr.TabItem("Reports", id=3):
-                    render_reports_page()
+                #with gr.Tab("Reports", id=3):
+                    #render_reports_page()
             
     # Connect Sidebar buttons to Tabs using gr.Tabs.update (Gradio 4.x style)
     nav_home.click(fn=lambda: gr.update(selected=0), outputs=tabs) # Home
