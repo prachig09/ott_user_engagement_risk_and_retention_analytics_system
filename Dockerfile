@@ -20,4 +20,7 @@ COPY . .
 EXPOSE 7860
 
 # Run the app
-CMD ["python", "-m", "main.py"]
+CMD ["python", "app.py"]
+
+# Or this (if your file is named main.py):
+CMD ["python", "main.py"]
