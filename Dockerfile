@@ -19,8 +19,9 @@ COPY . .
 # Expose Gradio port
 EXPOSE 7860
 
-# Run the app
-CMD ["python", "app.py"]
+# Environment variables for Gradio & Python paths
+ENV GRADIO_SERVER_NAME="0.0.0.0"
+ENV PYTHONPATH=/app
 
-# Or this (if your file is named main.py):
+# Run the app
 CMD ["python", "main.py"]
