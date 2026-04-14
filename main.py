@@ -1,0 +1,68 @@
+import gradio as gr
+from ui.styles import CSS
+from ui.components.sidebar import render_sidebar
+from ui.pages.home import render_home_page
+from ui.pages.predict import render_predict_page
+from ui.pages.upload import render_upload_page
+from ui.pages.reports import render_reports_page
+
+# 1. Define the custom color palette correctly to avoid the ValueError
+# This maps your grounding and light shades to the Gradio scale
+ott_green = gr.themes.Color(
+    name="ott_green",
+    c50="#e0f7f1",    # Lightest shade
+    c100="#b2e0d4",   # Light shade
+    c200="#66b3a1",   # Light accent
+    c300="#4da691",
+    c400="#26927a",
+    c500="#007a33",   # Main grounding green
+    c600="#3a3b3a",
+    c700="#004d00",   # Deep grounding green
+    c800="#000000",
+    c900="#000000",
+    c950="#001f00",
+)
+
+# 2. Initialize the Glass theme with the Color object
+# We use the ott_green for primary (buttons/links) and secondary (accents)
+theme = gr.themes.Soft(
+    primary_hue=ott_green, 
+    secondary_hue=ott_green,
+    neutral_hue="slate", # Professional grey for text and backgrounds
+).set(
+    # Optional: Force specific grounding colors for primary buttons
+    button_primary_background_fill="*primary_500",
+    button_primary_background_fill_hover="*primary_700",
+    button_primary_text_color="white",
+)
+
+# 3. Application Layout
+with gr.Blocks(title="OTT Retention System", css=CSS, theme=theme) as demo:
+    with gr.Row():
+        # Render Sidebar
+        # Returns: home, upload, predict, reports
+        nav_btns = render_sidebar()
+        
+        # Main Content Area
+        with gr.Column(scale=4):
+            with gr.Tabs() as tabs:
+                with gr.TabItem("Home", id=0):
+                    render_home_page()
+                
+                with gr.TabItem("Upload", id=1):
+                    render_upload_page()
+                
+                with gr.TabItem("Predict", id=2):
+                    render_predict_page()
+                
+                with gr.TabItem("Reports", id=3):
+                    render_reports_page()
+            
+    # Connect Sidebar buttons to Tabs using gr.Tabs.update (Gradio 4.x style)
+    nav_btns[0].click(fn=lambda: gr.Tabs(selected=0), outputs=tabs) # Home
+    nav_btns[1].click(fn=lambda: gr.Tabs(selected=1), outputs=tabs) # Upload
+    nav_btns[2].click(fn=lambda: gr.Tabs(selected=2), outputs=tabs) # Predict
+    nav_btns[3].click(fn=lambda: gr.Tabs(selected=3), outputs=tabs) # Reports
+
+if __name__ == "__main__":
+    demo.launch()
