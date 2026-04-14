@@ -6,7 +6,6 @@ CSS = """
 /* --- 1. RESPONSIVE & FLUID LAYOUT --- */
 .gradio-container {
     max-width: 100% !important; 
-    width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
     display: flex !important;
