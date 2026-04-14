@@ -1,14 +1,18 @@
+# Core Logic
 pandas==2.2.2
 numpy==1.26.4
 scikit-learn==1.4.2
 matplotlib==3.8.4
 joblib==1.4.2
 shap==0.45.0
+plotly==5.22.0
+requests==2.31.0
 
+# The "Conflict" Group - Pins are critical here
 gradio==4.29.0
 gradio_client==0.16.1
-fastapi==0.110.0
+pydantic==2.6.4
+pydantic-core==2.16.3
+fastapi==0.110.1
 uvicorn==0.29.0
 huggingface_hub==0.23.0
-
-plotly==5.22.0

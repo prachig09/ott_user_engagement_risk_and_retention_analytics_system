@@ -52,11 +52,11 @@ with gr.Blocks(title="OTT Retention System", css=CSS, theme=theme) as demo:
                 with gr.Tab("Upload", id=1):
                     render_upload_page()
                 
-                #with gr.Tab("Predict", id=2):
-                    #render_predict_page()
+                with gr.Tab("Predict", id=2):
+                    render_predict_page()
                 
-                #with gr.Tab("Reports", id=3):
-                    #render_reports_page()
+                with gr.Tab("Reports", id=3):
+                    render_reports_page()
             
     # Connect Sidebar buttons to Tabs using gr.Tabs.update (Gradio 4.x style)
     nav_home.click(fn=lambda: gr.update(selected=0), outputs=tabs) # Home
@@ -69,5 +69,6 @@ if __name__ == "__main__":
         server_name="0.0.0.0", 
         server_port=7860,
         show_api=False,  # This stops the 'get_api_info' crash!
-        show_error=True
+        show_error=True,
+        quiet=True
     )

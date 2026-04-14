@@ -1,27 +1,24 @@
-# Base image
 FROM python:3.10-slim
 
-# Set working directory
 WORKDIR /app
 
-# Copy requirements first (for caching)
+# Install system dependencies if any are needed for SHAP or Scikit-learn
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
 
-# Install dependencies
+# Force a clean, no-cache install of the specific versions
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir \
-    --default-timeout=100 \
-    --retries 5 \
-    -r requirements.txt
-# Copy entire project
+    pip install --no-cache-dir -r requirements.txt
+
 COPY . .
 
-# Expose Gradio port
 EXPOSE 7860
 
-# Environment variables for Gradio & Python paths
 ENV GRADIO_SERVER_NAME="0.0.0.0"
 ENV PYTHONPATH=/app
 
-# Run the app
-CMD ["python", "main.py"]
+# Use -u to see logs immediately in the terminal
+CMD ["python", "-u", "main.py"]

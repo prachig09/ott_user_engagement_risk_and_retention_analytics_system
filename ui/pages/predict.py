@@ -2,7 +2,7 @@ import gradio as gr
 import requests
 
 
-API_URL = "http://0.0.0.0:8000/full"
+API_URL = "http://127.0.0.1:8000/full"
 
 
 def get_prediction(age, gender, sub_type, charges, tenure, login_freq, last_login, watch_time, failures, calls):
