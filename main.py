@@ -65,4 +65,9 @@ with gr.Blocks(title="OTT Retention System", css=CSS, theme=theme) as demo:
     nav_reports.click(fn=lambda: gr.Tabs(selected=3), outputs=tabs) # Reports
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(
+        server_name="0.0.0.0", 
+        server_port=7860,
+        show_api=False,  # This stops the 'get_api_info' crash!
+        show_error=True
+    )
