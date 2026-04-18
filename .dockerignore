@@ -17,6 +17,12 @@ data/*
 !data/feature_metadata.csv
 !data/category_mappings.csv
 
+# Ensure Models are NOT ignored
+!model/
+!model/*.pkl
+!model/*.joblib
+!encoders/
+!encoders/*.pkl
 
 # Git and IDEs
 .git/
