@@ -1,77 +1,66 @@
 import gradio as gr
-import requests
+import copy
+# No requests needed
+from src.predict import predict, load_model_and_encoders, preprocess_input
+from src.explain import explain_prediction
+from src.recommend import generate_recommendations
 
-
-API_URL = "http://127.0.0.1:7860/full"
-#API_URL = "http://0.0.0.0:7860/full"
-
+# Load tools once for the UI
+model, encoders, feature_names = load_model_and_encoders()
 
 def get_prediction(age, gender, sub_type, charges, tenure, login_freq, last_login, watch_time, failures, calls):
-   payload = {
-       "data": {
-           "age": int(age),
-           "gender": str(gender),
-           "subscription_type": str(sub_type),
-           "monthly_charges": float(charges),
-           "tenure_in_months": int(tenure),
-           "login_frequency": int(login_freq),
-           "last_login_days": int(last_login),
-           "watch_time": float(watch_time),
-           "payment_failures": int(failures),
-           "customer_support_calls": int(calls)
-       }
+   payload_data = {
+       "age": int(age),
+       "gender": str(gender),
+       "subscription_type": str(sub_type),
+       "monthly_charges": float(charges),
+       "tenure_in_months": int(tenure),
+       "login_frequency": int(login_freq),
+       "last_login_days": int(last_login),
+       "watch_time": float(watch_time),
+       "payment_failures": int(failures),
+       "customer_support_calls": int(calls)
    }
   
    try:
-       response = requests.post(API_URL, json=payload, timeout=25)
-       res_data = response.json()
-      
-       # --- DEBUG: CHECK YOUR TERMINAL ---
-       print("\n--- API DEBUG OUTPUT ---")
-       print(res_data)
-      
-       # 1. Parse Prediction
-       pred = res_data.get("prediction", {})
-       risk = pred.get("risk_level", "N/A")
-       prob = pred.get("probability", 0)
+       # 1. Direct Prediction
+       prediction = predict(payload_data)
+       prob_value = float(prediction["probability"])
+       
+       # 2. Direct SHAP Explanation
+       factors = []
+       processed = preprocess_input(payload_data, encoders, feature_names)
+       exp_res = explain_prediction(processed, model, feature_names)
+       raw_factors = exp_res.get("top_factors", [])
+       total_impact = sum(abs(f.get("impact", 0)) for f in raw_factors)
+       
+       for f in raw_factors:
+           val = f.get("impact", 0)
+           pct = (abs(val) / (total_impact if total_impact > 0 else 1)) * 100
+           factors.append({
+               "feature": f.get("feature_name", f.get("feature")),
+               "impact_pct": round(pct, 1),
+               "direction": f.get("direction")
+           })
+
+       # 3. Format Verdict & Factors
+       risk = prediction.get("risk_level", "N/A")
        risk_icon = "🔴" if risk == "HIGH" else "🟡" if risk == "MODERATE" else "🟢"
-      
-       summary = f"{risk_icon} Risk: {risk}\nProbability: {prob:.2%}"
-      
-       # Inside ui/pages/predict.py -> get_prediction function
+       summary = f"{risk_icon} Risk: {risk}\nProbability: {prob_value:.2%}"
+       
+       factors_text = "\n".join([f"{'🔺' if f['direction']=='increase' else '🔹'} {f['feature'].replace('_',' ').title()}: {f['impact_pct']}% impact" for f in factors])
 
-
-       # 2. Parse SHAP Factors with Percentage
-       factors_list = res_data.get("explanation", [])
-       formatted_factors = []
-      
-       for f in factors_list:
-           feat = f['feature'].replace("_", " ").title() # Clean name: "watch_time" -> "Watch Time"
-           direction = "🔺" if f['direction'] == "increase" else "🔹"
-           pct = f['impact_pct']
-          
-           # Example output: "🔺 Watch Time: +15.4% impact"
-           formatted_factors.append(f"{direction} {feat}: {pct}% contribution")
-      
-       factors_text = "\n".join(formatted_factors) if formatted_factors else "No significant factors found."
-      
-       # 3. Parse Recommendations (Crucial fix here!)
-       recom = res_data.get("recommendation", {})
+       # 4. Direct Recommendations
+       recom = generate_recommendations(prob_value, payload_data, top_factors=factors)
        actions = recom.get("recommended_actions", [])
-      
-       if actions:
-           formatted_actions = "\n".join([f"✅ {a}" for a in actions])
-       else:
-           # If empty, let's see why
-           formatted_actions = f"No actions returned. API Keys: {list(recom.keys())}"
-
+       formatted_actions = "\n".join([f"✅ {a}" for a in actions]) if actions else "No specific actions."
 
        return summary, factors_text, formatted_actions
       
    except Exception as e:
-       print(f"UI ERROR: {e}")
-       return f"❌ Connection Error: {str(e)}", "Check API terminal", "Check API terminal"
+       return f"❌ Logic Error: {str(e)}", "Check terminal logs", "Check terminal logs"
 
+# ... keep the rest of your render_predict_page() ...
 
 def render_predict_page():
    with gr.Column() as page:

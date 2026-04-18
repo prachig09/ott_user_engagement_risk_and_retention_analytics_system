@@ -1,10 +1,10 @@
 import gradio as gr
 import pandas as pd
-import requests
+from src.predict import batch_predict # Direct Import
 import plotly.express as px
 import plotly.graph_objects as go
 
-BATCH_API_URL = "http://127.0.0.1:7860/predict_batch"
+#BATCH_API_URL = "http://127.0.0.1:7860/predict_batch"
 #BATCH_API_URL = "http://0.0.0.0:7860/predict_batch"
 
 
@@ -38,33 +38,26 @@ def create_visuals(df):
     return fig_pie, fig_hist
 
 def run_batch_analysis(file):
-    empty_df = pd.DataFrame()
-    empty_fig = go.Figure()
     if file is None:
-        return None, "❌ No file uploaded.", empty_fig, empty_fig
+        return None, "❌ No file uploaded.", go.Figure(), go.Figure()
     
     try:
         df = pd.read_csv(file.name)
         records = df.to_dict(orient="records")
-        payload = {"data": records}
         
-        response = requests.post(BATCH_API_URL, json=payload, timeout=120)
-        api_results = response.json()
+        # Direct Python Call - NO REQUESTS
+        api_results = batch_predict(records)
         
         if api_results.get("status") == "success":
             results_df = pd.DataFrame(api_results["predictions"])
-            
-            # Generate the charts based on new data
             pie_chart, hist_chart = create_visuals(results_df)
-            
             return results_df, f"✅ Analyzed {len(results_df)} records.", pie_chart, hist_chart
         else:
-            return None, f"❌ API Error: {api_results.get('message')}", pie_chart, hist_chart
+            return None, f"❌ Error: {api_results.get('message')}", go.Figure(), go.Figure()
             
     except Exception as e:
-        print(f"DEBUG: Batch Analysis Failed: {e}")
-        return empty_df, f"❌ Connection Error: {str(e)}", empty_fig, empty_fig
-
+        return pd.DataFrame(), f"❌ Logic Error: {str(e)}", go.Figure(), go.Figure()
+    
 def render_upload_page():
     with gr.Column() as page:
         gr.Markdown("# 📂 Batch Processing & Insights")

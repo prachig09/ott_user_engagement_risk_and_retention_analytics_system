@@ -18,7 +18,7 @@ gradio.routes.api_info = dummy_api_info
 client_utils.json_schema_to_python_type = lambda x: "Any"
 
 # --- 1. INTERNAL IMPORTS ---
-from src.predict import predict, load_model_and_encoders, preprocess_input
+from src.predict import batch_predict, predict, load_model_and_encoders, preprocess_input
 from src.recommend import generate_recommendations
 from src.explain import explain_prediction
 from main import demo, theme, CSS 
@@ -66,19 +66,7 @@ def full_pipeline(customer: CustomerData):
 
 @app.post("/predict_batch")
 def predict_batch(batch: BatchCustomerData):
-    try:
-        results = []
-        for customer_item in batch.data:
-            prediction = predict(customer_item) 
-            results.append({
-                "Customer_ID": customer_item.get("customer_id", "N/A"),
-                "Churn_Probability": round(float(prediction["probability"]), 3),
-                "Risk_Level": prediction["risk_level"],
-                "Priority": "🔴 High" if prediction["risk_level"] == "HIGH" else "🟢 Low"
-            })
-        return {"status": "success", "predictions": results}
-    except Exception as e: 
-        return {"status": "error", "message": str(e)}
+    return batch_predict(batch.data)
 
 # --- 3. GRADIO MOUNTING ---
 head_injection = f"<style>{CSS}</style>"

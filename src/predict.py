@@ -98,3 +98,30 @@ if __name__ == "__main__":
     print(f"Prediction: {result['label']}")
     print(f"Probability: {result['probability']}")
     print(f"Risk Level: {result['risk_level']}")
+
+# ... keep all your existing imports and functions ...
+
+def batch_predict(data_list):
+    """Integrated batch logic for both UI and API."""
+    try:
+        results = []
+        # Load model once for the whole batch to save memory
+        model, encoders, feature_names = load_model_and_encoders()
+        
+        for customer_item in data_list:
+            # We use the existing preprocessing and prediction logic
+            processed = preprocess_input(customer_item, encoders, feature_names)
+            prob = model.predict_proba(processed)[0][1]
+            pred = 1 if prob >= 0.5 else 0
+            
+            risk = "HIGH" if prob >= 0.7 else "MODERATE" if prob >= 0.4 else "LOW"
+            
+            results.append({
+                "Customer_ID": customer_item.get("customer_id", "N/A"),
+                "Churn_Probability": round(float(prob), 3),
+                "Risk_Level": risk,
+                "Priority": "🔴 High" if risk == "HIGH" else "🟢 Low"
+            })
+        return {"status": "success", "predictions": results}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
