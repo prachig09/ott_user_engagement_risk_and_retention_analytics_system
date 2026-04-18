@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
@@ -21,4 +21,4 @@ ENV GRADIO_SERVER_NAME="0.0.0.0"
 ENV PYTHONPATH=/app
 
 # Use -u to see logs immediately in the terminal
-CMD ["python", "-u", "main.py"]
+CMD ["python", "run_app.py"]

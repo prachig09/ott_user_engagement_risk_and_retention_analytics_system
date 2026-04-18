@@ -1,10 +1,35 @@
+# Python bytecode
 __pycache__/
-*.pyc
-*.pyo
-*.pkl
-mlruns/
+*.py[cod]
+*.pyd
+*.so
+
+# Environments and Secrets
 venv/
+.venv/
+env/
 .env
-data/
-.dvc/
+.flaskenv
+.aws/
+
+# Data handling
+data/*
+!data/feature_metadata.csv
+!data/category_mappings.csv
+
+# Models (Ensuring these names match your src/predict.py paths)
+!model/*.pkl
+!model/*.joblib
+!encoders/*.pkl
+
+# Git and IDEs
 .git/
+.gitignore
+.dvc/
+.vscode/
+.idea/
+
+# Logs and OS junk
+*.log
+.DS_Store
+Thumbs.db
