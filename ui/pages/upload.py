@@ -4,7 +4,10 @@ import requests
 import plotly.express as px
 import plotly.graph_objects as go
 
-BATCH_API_URL = "http://127.0.0.1:8000/predict_batch"
+BATCH_API_URL = "http://127.0.0.1:7860/predict_batch"
+#BATCH_API_URL = "http://0.0.0.0:7860/predict_batch"
+
+
 
 def create_visuals(df):
     if df is None or df.empty:
