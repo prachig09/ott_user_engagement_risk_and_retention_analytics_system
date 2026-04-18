@@ -68,3 +68,12 @@ model/*.joblib
 try.txt
 demo
 test_batch_api.py
+
+
+# =========================
+# AWS / Cloud
+# =========================
+.aws/
+.elasticbeanstalk/
+combined_results.csv
+output/
