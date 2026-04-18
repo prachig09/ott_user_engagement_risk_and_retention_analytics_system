@@ -45,11 +45,6 @@ data/*.csv
 data/*.zip
 data/*.parquet
 
-# =========================
-# Models (handled by DVC)
-# =========================
-model/*.pkl
-model/*.joblib
 
 # =========================
 # DVC Cache (auto-managed)
