@@ -1,6 +1,15 @@
 import os
 import joblib
 import pandas as pd
+import sys
+
+try:
+    from sklearn.linear_model import _loss
+except ImportError:
+    # This creates a dummy module so pickle doesn't crash
+    import types
+    _loss = types.ModuleType("_loss")
+    sys.modules["sklearn.linear_model._loss"] = _loss
 
 
 def load_model_and_encoders():
