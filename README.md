@@ -206,7 +206,7 @@ docker run -p 7860:7860 ott-mlops
 ```
 
 ---
-## 9. Project Structure
+## 10. Conclusion
 
 This project demonstrates an end-to-end MLOps system integrating data processing, model development, deployment, and automation. The design ensures reproducibility, scalability, and applicability in real-world OTT analytics.
 
