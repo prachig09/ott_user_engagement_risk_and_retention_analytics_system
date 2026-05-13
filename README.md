@@ -72,6 +72,8 @@ Input → Encoding → Alignment → Scaling → Prediction
 * Moderate: ≥ 0.4
 * Low: < 0.4
 
+![Prediction Pipeline](assets/pipeline_flow(1).png)
+
 ---
 
 ## 6. System Implementation
@@ -96,6 +98,8 @@ Docker-based packaging
 * Experiment Tracking: MLflow
 * CI/CD: GitHub Actions
 * Deployment: AWS EC2
+
+![MLOps Pipeline](assets/mlops_pipeline.png)
 
 ---
 
