@@ -82,9 +82,13 @@ Input → Encoding → Alignment → Scaling → Prediction
 
 FastAPI-based inference service
 
+![API_endpoints](assets/api_endpoints/api_endpoint.png)
+
 ### UI
 
 Gradio-based interactive interface
+
+![ui_pages_ss](assets/ui/home.png) ![ui_pages_ss](assets/ui/predict.png) ![ui_pages_ss](assets/ui/reports.png) ![ui_pages_ss](assets/ui/upload.png)
 
 ### Containerization
 
@@ -137,7 +141,7 @@ pip install -r requirements.txt
 ```bash
 dvc pull
 ```
-
+![DVC_pipeline](assets/dvc/dvc_dag_ss.png)
 ---
 
 ### 8.4 Run Application
