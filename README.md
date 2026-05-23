@@ -88,7 +88,7 @@ FastAPI-based inference service
 
 Gradio-based interactive interface
 
-![ui_pages_ss](assets/ui/home.png) ![ui_pages_ss](assets/ui/predict.png) ![ui_pages_ss](assets/ui/reports.png) ![ui_pages_ss](assets/ui/upload.png)
+![ui_pages_ss](assets/ui/home.png)
 
 ### Containerization
 
