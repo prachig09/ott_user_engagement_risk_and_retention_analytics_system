@@ -219,3 +219,6 @@ docker run -p 7860:7860 ott-mlops
 This project demonstrates an end-to-end MLOps system integrating data processing, model development, deployment, and automation. The design ensures reproducibility, scalability, and applicability in real-world OTT analytics.
 
 ---
+## 11. License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
